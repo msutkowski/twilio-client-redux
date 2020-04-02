@@ -50,7 +50,7 @@ export interface Options {
   enableRingingState?: boolean;
   offerSdp: string;
   audioConstraints: boolean;
-  codecPreferences: string[];
+  codecPreferences: Codec[];
   dscp: boolean;
   enableIceRestart: boolean;
   forceAggressiveIceNomination: boolean;
@@ -93,7 +93,7 @@ export const getSerializableFromConnection = (
 ): SerializedConnection => {
   const {
     direction,
-    codec,
+    // codec,
     _eventsCount,
     _maxListeners,
     parameters,
