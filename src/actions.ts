@@ -1,21 +1,8 @@
-import {
-  DEFAULT_PREFIX,
-  DEVICE_SETUP,
-  DEVICE_DESTROY,
-  DEVICE_EVENT_CANCEL,
-  DEVICE_EVENT_CONNECT,
-  DEVICE_EVENT_ERROR,
-  DEVICE_EVENT_DISCONNECT,
-  DEVICE_EVENT_INCOMING,
-  DEVICE_EVENT_OFFLINE,
-  DEVICE_EVENT_READY,
-  DEVICE_SET_INPUT_DEVICE,
-  DEVICE_SET_OUTPUT_DEVICE,
-  DEVICE_TEST_OUTPUT_DEVICE,
-  UNHANDLED_ERROR,
-} from './actionTypes';
 import { miniSerializeError, SerializedConnection } from './utils';
 import { createAction } from '@reduxjs/toolkit';
+import { CONSTANTS } from './';
+
+const { DEFAULT_PREFIX } = CONSTANTS;
 
 // type PayloadAction<T> = {
 //   type: string;
@@ -53,7 +40,7 @@ import { createAction } from '@reduxjs/toolkit';
 // Action creators for user dispatched actions. These actions are all optionally
 // prefixed.
 export const setup = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_SETUP}`,
+  `${DEFAULT_PREFIX}::DEVICE_SETUP`,
   (
     token: string,
     opts?: DeviceConfigOptions,
@@ -67,14 +54,14 @@ export const setup = createAction(
   })
 );
 export const destroy = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_DESTROY}`,
+  `${DEFAULT_PREFIX}::DEVICE_DESTROY`,
   (deviceId: string = 'default') => ({
     payload: { deviceId },
   })
 );
 
 export const setInputDevice = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_SET_INPUT_DEVICE}`,
+  `${DEFAULT_PREFIX}::DEVICE_SET_INPUT_DEVICE`,
   (audioDeviceId: string, deviceId: string = 'default') => ({
     payload: {
       audioDeviceId,
@@ -83,7 +70,7 @@ export const setInputDevice = createAction(
   })
 );
 export const setOutputDevice = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_SET_OUTPUT_DEVICE}`,
+  `${DEFAULT_PREFIX}::DEVICE_SET_OUTPUT_DEVICE`,
   (audioDeviceId: string, deviceId: string = 'default') => ({
     payload: {
       audioDeviceId,
@@ -92,55 +79,164 @@ export const setOutputDevice = createAction(
   })
 );
 export const testOutputDevice = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_TEST_OUTPUT_DEVICE}`,
+  `${DEFAULT_PREFIX}::DEVICE_TEST_OUTPUT_DEVICE`,
   (audioDeviceId?: string, deviceId: string = 'default') => ({
     payload: { audioDeviceId, deviceId },
+  })
+);
+
+/**
+ * You can optionally specify an audioConstraints object to change the behavior of the local media stream during this call. You can use this to select a specific microphone, or turn off features like auto-gain control. Each web browser implements a different set of MediaTrackConstraints which may be used as audioConstraints, so consult your browser's implementation of getUserMedia for further details.
+ * https://www.twilio.com/docs/voice/client/javascript/connection#accept
+ *
+ * var audioConstraints = {
+ * optional: [{ sourceId: 'XXX' }]
+ *  };
+ */
+export const acceptCall = createAction(
+  `${DEFAULT_PREFIX}::ACCEPT_CALL`,
+  (audioConstraints: MediaTrackConstraints, deviceId: string = 'default') => ({
+    payload: { audioConstraints, deviceId },
+  })
+);
+export const rejectCall = createAction(
+  `${DEFAULT_PREFIX}::REJECT_CALL`,
+  (deviceId: string = 'default') => ({
+    payload: { deviceId },
+  })
+);
+export const ignoreCall = createAction(
+  `${DEFAULT_PREFIX}::IGNORE_CALL`,
+  (deviceId: string = 'default') => ({
+    payload: { deviceId },
+  })
+);
+
+export const setMute = createAction(
+  `${DEFAULT_PREFIX}::SET_MUTE`,
+  (muted: boolean, deviceId: string = 'default') => ({
+    payload: { muted, deviceId },
+  })
+);
+export const toggleMute = createAction(
+  `${DEFAULT_PREFIX}::TOGGLE_MUTE`,
+  (deviceId: string = 'default') => ({
+    payload: { deviceId },
+  })
+);
+export const getMuteStatus = createAction(
+  `${DEFAULT_PREFIX}::GET_MUTE_STATUS`,
+  (deviceId: string = 'default') => ({
+    payload: {
+      deviceId,
+    },
+  })
+);
+export const getStatus = createAction(
+  `${DEFAULT_PREFIX}::GET_STATUS`,
+  (deviceId: string = 'default') => ({
+    payload: { deviceId },
+  })
+);
+export const sendDigit = createAction(
+  `${DEFAULT_PREFIX}::SEND_DIGIT`,
+  (digit: string, deviceId: string = 'default') => ({
+    payload: { digit },
+  })
+);
+export const hangupCall = createAction(
+  `${DEFAULT_PREFIX}::HANGUP`,
+  (deviceId: string = 'default') => ({
+    payload: {},
+  })
+);
+/**
+ * You can use the params passed to the application in .connect() to dynamically generate the right TwiML for your app. For example, you could do the following in your JavaScript code:
+ * ```js
+ * var number = '5558675309';
+ * var connection = Twilio.Device.connect({
+ *   phone: number
+ * });
+ * ```
+ * https://www.twilio.com/docs/voice/client/javascript/device#connect
+ */
+export const makeCall = createAction(
+  `${DEFAULT_PREFIX}::MAKE_CALL`,
+  (
+    params: Record<string, string>,
+    audioConstraints: MediaTrackConstraints,
+    deviceId: string = 'default'
+  ) => ({
+    payload: {
+      audioConstraints,
+      params,
+      deviceId,
+    },
   })
 );
 
 // Action creators for actions dispatched by twilio-client-redux - tied to Device Events
 
 export const onCancel = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_CANCEL}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_CANCEL`,
   (connection: SerializedConnection) => ({
     payload: connection,
   })
 );
 export const onConnect = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_CONNECT}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_CONNECT`,
   (connection: SerializedConnection) => ({
     payload: connection,
   })
 );
 
 export const onError = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_ERROR}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_ERROR`,
   (error: object) => ({
     payload: error,
   })
 );
 export const onDisconnect = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_DISCONNECT}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_DISCONNECT`,
   (connection: SerializedConnection) => ({
     payload: connection,
   })
 );
 export const onIncoming = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_INCOMING}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_INCOMING`,
   (connection: SerializedConnection) => ({
     payload: connection,
   })
 );
 export const onOffline = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_OFFLINE}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_OFFLINE`,
   (device: object) => ({
     payload: device,
   })
 );
 export const onReady = createAction(
-  `${DEFAULT_PREFIX}::${DEVICE_EVENT_READY}`,
+  `${DEFAULT_PREFIX}::DEVICE_EVENT_READY`,
   (device: object) => ({
     payload: device,
+  })
+);
+
+type ConnectionStatus =
+  | 'pending'
+  | 'connecting'
+  | 'ringing'
+  | 'open'
+  | 'closed';
+export const onMuteStatus = createAction(
+  `${DEFAULT_PREFIX}::CONNECTION_MUTE_STATUS`,
+  (muted: boolean) => ({
+    payload: { muted },
+  })
+);
+export const onStatus = createAction(
+  `${DEFAULT_PREFIX}::CONNECTION_STATUS`,
+  (status: ConnectionStatus) => ({
+    payload: { status },
   })
 );
 
@@ -154,7 +250,7 @@ export type Action =
   | ReturnType<typeof onReady>;
 
 export const error = createAction(
-  `${DEFAULT_PREFIX}::${UNHANDLED_ERROR}`,
+  `${DEFAULT_PREFIX}::UNHANDLED_ERROR`,
   (action: Action | null, err: Error) => ({
     error: miniSerializeError(err),
     payload: action,

@@ -17,8 +17,6 @@ import {
 } from './actions';
 import { default as createMiddleware, CONSTANTS } from './createMiddleware';
 
-export * from './actionTypes';
-
 export {
   // user actions
   setup,

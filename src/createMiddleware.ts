@@ -16,8 +16,18 @@ import {
   testOutputDevice,
   error,
   Action,
+  setMute,
+  toggleMute,
+  acceptCall,
+  rejectCall,
+  ignoreCall,
+  hangupCall,
+  getMuteStatus,
+  onMuteStatus,
+  onStatus,
+  getStatus,
+  makeCall,
 } from './actions';
-import * as actionTypes from './actionTypes';
 import {
   getSerializableFromConnection,
   getSerializableFromDevice,
@@ -25,6 +35,7 @@ import {
 } from './utils';
 
 export const CONSTANTS = {
+  DEFAULT_PREFIX: '@@tcr',
   TCR_INPUT_DEVICE_KEY: 'tcr_input_device',
   TCR_OUTPUT_DEVICE_KEY: 'tcr_output_device',
 };
@@ -36,7 +47,7 @@ export const CONSTANTS = {
 const defaultOptions = {
   storeAudioDevices: true,
   connectOnIncoming: true,
-  prefix: actionTypes.DEFAULT_PREFIX,
+  prefix: CONSTANTS.DEFAULT_PREFIX,
 };
 
 /**
@@ -138,6 +149,64 @@ export default (opts?: MiddlewareOptions): Middleware => {
       } else {
         console.error(`Device ${deviceId} not found or already destroyed`);
       }
+    },
+    [makeCall.type]: (
+      _: MiddlewareAPI,
+      {
+        payload: { deviceId, params, audioConstraints },
+      }: ReturnType<typeof makeCall>
+    ) => {
+      devices[deviceId].connect(params, audioConstraints);
+    },
+    [acceptCall.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId, audioConstraints } }: ReturnType<typeof acceptCall>
+    ) => {
+      devices[deviceId].activeConnection().accept(audioConstraints);
+    },
+    [rejectCall.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof rejectCall>
+    ) => {
+      devices[deviceId].activeConnection().reject();
+    },
+    [ignoreCall.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof ignoreCall>
+    ) => {
+      devices[deviceId].activeConnection().ignore();
+    },
+    [hangupCall.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof ignoreCall>
+    ) => {
+      devices[deviceId].activeConnection().disconnect();
+    },
+    [setMute.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId, muted } }: ReturnType<typeof setMute>
+    ) => {
+      devices[deviceId].activeConnection().mute(muted);
+    },
+    [toggleMute.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof toggleMute>
+    ) => {
+      devices[deviceId]
+        .activeConnection()
+        .mute(!devices[deviceId].activeConnection().isMuted());
+    },
+    [getMuteStatus.type]: (
+      { dispatch }: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof getMuteStatus>
+    ) => {
+      dispatch(onMuteStatus(devices[deviceId].activeConnection().isMuted()));
+    },
+    [getStatus.type]: (
+      { dispatch }: MiddlewareAPI,
+      { payload: { deviceId } }: ReturnType<typeof getStatus>
+    ) => {
+      dispatch(onStatus(devices[deviceId].activeConnection().status()));
     },
     [setInputDevice.type]: (
       _: MiddlewareAPI,
