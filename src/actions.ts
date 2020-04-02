@@ -1,6 +1,6 @@
 import { miniSerializeError, SerializedConnection } from './utils';
 import { createAction } from '@reduxjs/toolkit';
-import { CONSTANTS } from './';
+import { CONSTANTS } from './constants';
 
 const { DEFAULT_PREFIX } = CONSTANTS;
 

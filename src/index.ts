@@ -25,7 +25,8 @@ import {
   onReady,
   error,
 } from './actions';
-import { default as createMiddleware, CONSTANTS } from './createMiddleware';
+import { default as createMiddleware } from './createMiddleware';
+import { CONSTANTS } from './constants';
 
 export {
   // user actions
