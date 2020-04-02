@@ -1,10 +1,18 @@
 {
+  "name": "twilio-client-redux",
+  "author": "Matt Sutkowski <msutkowski@gmail.com>",
   "version": "0.1.0",
   "license": "MIT",
+  "keywords": [
+    "redux",
+    "twilio"
+  ],
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist",
+    "dist/*.js",
+    "dist/*.js.map",
+    "dist/typings.d.ts",
     "src"
   ],
   "engines": {
@@ -17,9 +25,6 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build"
   },
-  "peerDependencies": {
-    "react": ">=16"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -31,8 +36,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "twilio-client-redux",
-  "author": "Matt Sutkowski",
   "module": "dist/twilio-client-redux.esm.js",
   "unpkg": "dist/twilio-client-redux.umd.min.js",
   "devDependencies": {
