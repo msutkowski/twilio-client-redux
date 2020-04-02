@@ -1,7 +1,15 @@
-// Borrowed from https://github.com/reduxjs/redux-toolkit
+// Based on https://github.com/reduxjs/redux-toolkit
 export interface SerializedError {
   name?: string;
   message?: string;
+  stack?: string;
+  code?: string;
+}
+export interface TwilioError {
+  causes?: string;
+  description?: string;
+  explanation?: string[];
+  solutions?: string[];
   stack?: string;
   code?: string;
 }
@@ -12,10 +20,24 @@ const commonProperties: Array<keyof SerializedError> = [
   'stack',
   'code',
 ];
-export const miniSerializeError = (value: any): SerializedError => {
+const twilioErrorProperties: Array<keyof TwilioError> = [
+  'causes',
+  'code',
+  'description',
+  'explanation',
+  'solutions',
+  'stack',
+];
+export const miniSerializeError = (
+  value: any,
+  isTwilioError?: boolean
+): SerializedError => {
   if (typeof value === 'object' && value !== null) {
-    const simpleError: SerializedError = {};
-    for (const property of commonProperties) {
+    const simpleError: SerializedError & TwilioError = {};
+    let errorProperties = isTwilioError
+      ? twilioErrorProperties
+      : commonProperties;
+    for (const property of errorProperties) {
       if (typeof value[property] === 'string') {
         simpleError[property] = value[property];
       }

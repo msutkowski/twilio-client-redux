@@ -21,6 +21,7 @@ import * as actionTypes from './actionTypes';
 import {
   getSerializableFromConnection,
   getSerializableFromDevice,
+  miniSerializeError,
 } from './utils';
 
 export const CONSTANTS = {
@@ -94,7 +95,17 @@ export default (opts?: MiddlewareOptions): Middleware => {
       devices[deviceId].on('connect', (connection: any) => {
         dispatch(onConnect(getSerializableFromConnection(connection)));
       });
-      devices[deviceId].on('error', (error: any) => dispatch(onError(error)));
+      // Serialize the twilioError if it exists
+      devices[deviceId].on('error', (error: any) =>
+        dispatch(
+          onError({
+            ...error,
+            ...(error.twilioError
+              ? { twilioError: miniSerializeError(error.twilioError) }
+              : {}),
+          })
+        )
+      );
       devices[deviceId].on('disconnect', (connection: any) =>
         dispatch(onDisconnect(getSerializableFromConnection(connection)))
       );
