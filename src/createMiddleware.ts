@@ -27,6 +27,7 @@ import {
   onStatus,
   getStatus,
   makeCall,
+  sendDigit,
 } from './actions';
 import {
   getSerializableFromConnection,
@@ -195,6 +196,12 @@ export default (opts?: MiddlewareOptions): Middleware => {
       devices[deviceId]
         .activeConnection()
         .mute(!devices[deviceId].activeConnection().isMuted());
+    },
+    [sendDigit.type]: (
+      _: MiddlewareAPI,
+      { payload: { deviceId, digit } }: ReturnType<typeof sendDigit>
+    ) => {
+      devices[deviceId].activeConnection().sendDigits(digit);
     },
     [getMuteStatus.type]: (
       { dispatch }: MiddlewareAPI,

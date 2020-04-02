@@ -141,13 +141,13 @@ export const getStatus = createAction(
 export const sendDigit = createAction(
   `${DEFAULT_PREFIX}::SEND_DIGIT`,
   (digit: string, deviceId: string = 'default') => ({
-    payload: { digit },
+    payload: { digit, deviceId },
   })
 );
 export const hangupCall = createAction(
   `${DEFAULT_PREFIX}::HANGUP`,
   (deviceId: string = 'default') => ({
-    payload: {},
+    payload: { deviceId },
   })
 );
 /**
