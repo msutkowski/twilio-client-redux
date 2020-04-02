@@ -14,104 +14,152 @@ import {
   DEVICE_TEST_OUTPUT_DEVICE,
   UNHANDLED_ERROR,
 } from './actionTypes';
-import { Action } from 'types';
-import { miniSerializeError } from './utils';
+import { miniSerializeError, SerializedConnection } from './utils';
+import { createAction } from '@reduxjs/toolkit';
 
-type PayloadAction<T> = {
-  type: string;
-  meta: {
-    timestamp: string;
-  };
-  payload: T;
-};
+// type PayloadAction<T> = {
+//   type: string;
+//   meta: {
+//     timestamp: string;
+//   };
+//   payload: T;
+// };
 
-/**
- * Action creator util
- *
- * @param {string} actionType
- * @param {T} payload
- *
- * @returns {PayloadAction<T>}
- */
-function createAction<T>(
-  type: string,
-  payload: T,
-  meta?: any
-): PayloadAction<T> {
-  const action = {
-    type,
-    meta: {
-      timestamp: String(new Date()),
-      ...meta,
-    },
-    payload,
-  };
+// /**
+//  * Action creator util - deprecated in favor of redux toolkits
+//  *
+//  * @param {string} actionType
+//  * @param {T} payload
+//  *
+//  * @returns {PayloadAction<T>}
+//  */
+// function createAction<T>(
+//   type: string,
+//   payload: T,
+//   meta?: any
+// ): PayloadAction<T> {
+//   const action = {
+//     type,
+//     meta: {
+//       timestamp: String(new Date()),
+//       ...meta,
+//     },
+//     payload,
+//   };
 
-  return action;
-}
+//   return action;
+// }
+
 // Action creators for user dispatched actions. These actions are all optionally
 // prefixed.
-export const setup = (
-  token: string,
-  opts?: DeviceConfigOptions,
-  deviceId: string = 'default'
-) => {
-  return createAction(`${DEFAULT_PREFIX}::${DEVICE_SETUP}`, {
-    token,
-    opts,
-    deviceId,
-  });
-};
-export const destroy = (deviceId: string = 'default') =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_DESTROY}`, { deviceId });
+export const setup = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_SETUP}`,
+  (
+    token: string,
+    opts?: DeviceConfigOptions,
+    deviceId: string = 'default'
+  ) => ({
+    payload: {
+      token,
+      opts,
+      deviceId,
+    },
+  })
+);
+export const destroy = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_DESTROY}`,
+  (deviceId: string = 'default') => ({
+    payload: { deviceId },
+  })
+);
 
-export const setInputDevice = (
-  audioDeviceId: string,
-  deviceId: string = 'default'
-) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_SET_INPUT_DEVICE}`, {
-    audioDeviceId,
-    deviceId,
-  });
-export const setOutputDevice = (
-  audioDeviceId: string,
-  deviceId: string = 'default'
-) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_SET_OUTPUT_DEVICE}`, {
-    audioDeviceId,
-    deviceId,
-  });
-export const testOutputDevice = (
-  audioDeviceId?: string,
-  deviceId: string = 'default'
-) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_TEST_OUTPUT_DEVICE}`, {
-    audioDeviceId,
-    deviceId,
-  });
+export const setInputDevice = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_SET_INPUT_DEVICE}`,
+  (audioDeviceId: string, deviceId: string = 'default') => ({
+    payload: {
+      audioDeviceId,
+      deviceId,
+    },
+  })
+);
+export const setOutputDevice = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_SET_OUTPUT_DEVICE}`,
+  (audioDeviceId: string, deviceId: string = 'default') => ({
+    payload: {
+      audioDeviceId,
+      deviceId,
+    },
+  })
+);
+export const testOutputDevice = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_TEST_OUTPUT_DEVICE}`,
+  (audioDeviceId?: string, deviceId: string = 'default') => ({
+    payload: { audioDeviceId, deviceId },
+  })
+);
 
 // Action creators for actions dispatched by twilio-client-redux - tied to Device Events
 
-export const onCancel = (connection: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_CANCEL}`, connection);
-export const onConnect = (connection: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_CONNECT}`, connection);
-export const onError = (error: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_ERROR}`, error);
-export const onDisconnect = (connection: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_DISCONNECT}`, connection);
-export const onIncoming = (connection: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_INCOMING}`, connection);
-export const onOffline = (device: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_OFFLINE}`, device);
-export const onReady = (device: object) =>
-  createAction(`${DEFAULT_PREFIX}::${DEVICE_EVENT_READY}`, device);
+export const onCancel = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_CANCEL}`,
+  (connection: SerializedConnection) => ({
+    payload: connection,
+  })
+);
+export const onConnect = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_CONNECT}`,
+  (connection: SerializedConnection) => ({
+    payload: connection,
+  })
+);
 
-export const error = (action: Action | null, err: Error) =>
-  createAction(`${DEFAULT_PREFIX}::${UNHANDLED_ERROR}`, err, {
+export const onError = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_ERROR}`,
+  (error: object) => ({
+    payload: error,
+  })
+);
+export const onDisconnect = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_DISCONNECT}`,
+  (connection: SerializedConnection) => ({
+    payload: connection,
+  })
+);
+export const onIncoming = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_INCOMING}`,
+  (connection: SerializedConnection) => ({
+    payload: connection,
+  })
+);
+export const onOffline = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_OFFLINE}`,
+  (device: object) => ({
+    payload: device,
+  })
+);
+export const onReady = createAction(
+  `${DEFAULT_PREFIX}::${DEVICE_EVENT_READY}`,
+  (device: object) => ({
+    payload: device,
+  })
+);
+
+export type Action =
+  | ReturnType<typeof onCancel>
+  | ReturnType<typeof onConnect>
+  | ReturnType<typeof onError>
+  | ReturnType<typeof onDisconnect>
+  | ReturnType<typeof onIncoming>
+  | ReturnType<typeof onOffline>
+  | ReturnType<typeof onReady>;
+
+export const error = createAction(
+  `${DEFAULT_PREFIX}::${UNHANDLED_ERROR}`,
+  (action: Action | null, err: Error) => ({
     error: miniSerializeError(err),
     payload: action,
-  });
+  })
+);
 
 // Twilio Device Options
 export enum SoundName {

@@ -27,10 +27,70 @@ export const miniSerializeError = (value: any): SerializedError => {
   return { message: String(value) };
 };
 
-export const getSerializableFromConnection = (connection: any) => {
-  if (Object.keys(connection).length === 0) {
-    return { error: 'Missing connection' };
-  }
+export enum Codec {
+  Opus = 'opus',
+  PCMU = 'pcmu',
+}
+
+export interface Parameters {
+  From: string;
+  CallSid: string;
+  To: string;
+  AccountSid: string;
+}
+
+export interface CallParameters {
+  From: string;
+  CallSid: string;
+  To: string;
+  AccountSid: string;
+}
+
+export interface Options {
+  enableRingingState?: boolean;
+  offerSdp: string;
+  audioConstraints: boolean;
+  codecPreferences: string[];
+  dscp: boolean;
+  enableIceRestart: boolean;
+  forceAggressiveIceNomination: boolean;
+  callParameters: CallParameters;
+}
+
+interface Message {}
+
+interface Options2 {}
+interface Pstream {
+  options: Options2;
+  token: string;
+  status: string;
+  uri: string;
+  gateway: string;
+  region: string;
+  _eventsCount: number;
+}
+
+export interface SerializedConnection {
+  direction: string;
+  parameters: Parameters;
+  _maxListeners: number; // maybe doesn't exist?
+  _eventsCount: number;
+  _inputVolumeStreak: number;
+  _isAnswered: boolean;
+  _latestInputVolume: number;
+  _latestOutputVolume: number;
+  _status: string;
+  options: Options;
+  sendHangup: boolean;
+  message: Message;
+  _direction: string;
+  outboundConnectionId: string;
+  pstream: Pstream;
+}
+
+export const getSerializableFromConnection = (
+  connection: any
+): SerializedConnection => {
   const {
     direction,
     codec,
@@ -47,7 +107,7 @@ export const getSerializableFromConnection = (connection: any) => {
       offerSdp,
       audioConstraints,
       codecPreferences,
-      dialtonePlayer,
+      //   dialtonePlayer,
       dscp,
       enableIceRestart,
       forceAggressiveIceNomination,
@@ -71,7 +131,7 @@ export const getSerializableFromConnection = (connection: any) => {
   return {
     direction,
     parameters,
-    codec,
+    // codec,
     _eventsCount,
     _maxListeners,
     _inputVolumeStreak,
@@ -84,7 +144,7 @@ export const getSerializableFromConnection = (connection: any) => {
       offerSdp,
       audioConstraints,
       codecPreferences,
-      dialtonePlayer,
+      //   dialtonePlayer,
       dscp,
       enableIceRestart,
       forceAggressiveIceNomination,
@@ -105,10 +165,20 @@ export const getSerializableFromConnection = (connection: any) => {
     },
   };
 };
-export const getSerializableFromDevice = (device: any) => {
-  if (Object.keys(device).length === 0) {
-    return { error: 'Missing device' };
-  }
+
+export interface SerializedDevice {
+  isInitialized: boolean;
+  token: string;
+  _region: string;
+  _status: string;
+  options: {
+    allowIncomingWhileBusy: boolean;
+    audioConstraints: boolean;
+    closeProtection: false;
+    codecPreferences: Codec[];
+  };
+}
+export const getSerializableFromDevice = (device: any): SerializedDevice => {
   const {
     isInitialized,
     token,

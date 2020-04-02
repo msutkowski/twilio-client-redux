@@ -1,7 +1,6 @@
 import { Middleware, MiddlewareAPI } from 'redux';
 import Twilio from 'twilio-client';
 
-import { Action, Options } from './types';
 import {
   setup,
   onReady,
@@ -16,6 +15,7 @@ import {
   setOutputDevice,
   testOutputDevice,
   error,
+  Action,
 } from './actions';
 import * as actionTypes from './actionTypes';
 import {
@@ -28,14 +28,13 @@ export const CONSTANTS = {
   TCR_OUTPUT_DEVICE_KEY: 'tcr_output_device',
 };
 
-// import ReduxWebSocket from './ReduxWebSocket';
-
 /**
  * Default middleware opts
  * @private
  */
 const defaultOptions = {
   storeAudioDevices: true,
+  connectOnIncoming: true,
   prefix: actionTypes.DEFAULT_PREFIX,
 };
 
@@ -46,7 +45,12 @@ const defaultOptions = {
  *
  * @returns {Middleware}
  */
-export default (opts?: Options): Middleware => {
+export interface MiddlewareOptions {
+  storeAudioDevices?: boolean;
+  connectOnIncoming?: boolean;
+  prefix?: string;
+}
+export default (opts?: MiddlewareOptions): Middleware => {
   const options = { ...defaultOptions, ...opts };
   const { prefix } = options;
   const actionPrefixExp = RegExp(`^${prefix}::`);
@@ -56,10 +60,7 @@ export default (opts?: Options): Middleware => {
     [key: string]: typeof Twilio.Device;
   } = {};
 
-  // Create a new redux websocket instance.
-  //   const reduxWebsocket = new ReduxWebSocket(options);
-
-  const getAudioConstaints = () => {
+  const getAudioConstraints = () => {
     let audioConstraints = {};
     if (localStorage.getItem(CONSTANTS.TCR_INPUT_DEVICE_KEY)) {
       audioConstraints = {
@@ -73,7 +74,7 @@ export default (opts?: Options): Middleware => {
 
   // Define the list of handlers, now that we have an instance of ReduxWebSocket.
   const handlers = {
-    [actionTypes.DEVICE_SETUP]: (
+    [setup.type]: (
       { dispatch }: MiddlewareAPI,
       { payload: { token, opts, deviceId } }: ReturnType<typeof setup>
     ) => {
@@ -96,7 +97,9 @@ export default (opts?: Options): Middleware => {
         dispatch(onDisconnect(getSerializableFromConnection(connection)))
       );
       devices[deviceId].on('incoming', (connection: any) => {
-        connection.accept(getAudioConstaints());
+        if (options.connectOnIncoming) {
+          connection.accept(getAudioConstraints());
+        }
         dispatch(onIncoming(getSerializableFromConnection(connection)));
       });
       devices[deviceId].on('offline', (device: any) =>
@@ -113,7 +116,7 @@ export default (opts?: Options): Middleware => {
         dispatch(onReady(getSerializableFromDevice(device)));
       });
     },
-    [actionTypes.DEVICE_DESTROY]: (
+    [destroy.type]: (
       { dispatch }: MiddlewareAPI,
       { payload: { deviceId } }: ReturnType<typeof destroy>
     ) => {
@@ -123,25 +126,33 @@ export default (opts?: Options): Middleware => {
         console.error(`Device ${deviceId} not found or already destroyed`);
       }
     },
-    [actionTypes.DEVICE_SET_INPUT_DEVICE]: (
+    [setInputDevice.type]: (
       _: MiddlewareAPI,
       { payload }: ReturnType<typeof setInputDevice>
     ) => {
-      localStorage.setItem(
+      let storageType = sessionStorage;
+      if (options.storeAudioDevices) {
+        storageType = localStorage;
+      }
+      storageType.setItem(
         CONSTANTS.TCR_INPUT_DEVICE_KEY,
         payload.audioDeviceId
       );
     },
-    [actionTypes.DEVICE_SET_OUTPUT_DEVICE]: (
+    [setOutputDevice.type]: (
       _: MiddlewareAPI,
       { payload }: ReturnType<typeof setOutputDevice>
     ) => {
-      localStorage.setItem(
+      let storageType = sessionStorage;
+      if (options.storeAudioDevices) {
+        storageType = localStorage;
+      }
+      storageType.setItem(
         CONSTANTS.TCR_OUTPUT_DEVICE_KEY,
         payload.audioDeviceId
       );
     },
-    [actionTypes.DEVICE_TEST_OUTPUT_DEVICE]: (
+    [testOutputDevice.type]: (
       _: MiddlewareAPI,
       { payload }: ReturnType<typeof testOutputDevice>
     ) => {
