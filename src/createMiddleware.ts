@@ -81,6 +81,8 @@ export default (opts?: MiddlewareOptions): Middleware => {
       // Create a device
       if (!devices[deviceId]) {
         devices[deviceId] = new Twilio.Device();
+      } else {
+        return; // TODO: should we tear down the device and recreate if they try to reinitialize?
       }
 
       devices[deviceId].setup(token, opts);
@@ -167,8 +169,7 @@ export default (opts?: MiddlewareOptions): Middleware => {
 
     // Check if action type matches prefix
     if (actionType && actionType.match(actionPrefixExp)) {
-      const baseActionType = action.type.replace(actionPrefixExp, '');
-      const handler = Reflect.get(handlers, baseActionType);
+      const handler = Reflect.get(handlers, actionType);
 
       if (handler) {
         try {
