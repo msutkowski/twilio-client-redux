@@ -4,39 +4,6 @@ import { CONSTANTS } from './';
 
 const { DEFAULT_PREFIX } = CONSTANTS;
 
-// type PayloadAction<T> = {
-//   type: string;
-//   meta: {
-//     timestamp: string;
-//   };
-//   payload: T;
-// };
-
-// /**
-//  * Action creator util - deprecated in favor of redux toolkits
-//  *
-//  * @param {string} actionType
-//  * @param {T} payload
-//  *
-//  * @returns {PayloadAction<T>}
-//  */
-// function createAction<T>(
-//   type: string,
-//   payload: T,
-//   meta?: any
-// ): PayloadAction<T> {
-//   const action = {
-//     type,
-//     meta: {
-//       timestamp: String(new Date()),
-//       ...meta,
-//     },
-//     payload,
-//   };
-
-//   return action;
-// }
-
 // Action creators for user dispatched actions. These actions are all optionally
 // prefixed.
 export const setup = createAction(
