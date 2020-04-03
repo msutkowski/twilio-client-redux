@@ -2,7 +2,7 @@
   "name": "twilio-client-redux",
   "author": "Matt Sutkowski <msutkowski@gmail.com>",
   "description": "Redux middleware for managing twilio client devices and connections",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "keywords": [
     "redux",
