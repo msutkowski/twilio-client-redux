@@ -12,7 +12,7 @@
     "access": "public"
   },
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/typings.d.ts",
   "files": [
     "dist/*.js",
     "dist/*.js.map",
