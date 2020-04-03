@@ -1,5 +1,14 @@
-*.log
 .DS_Store
+*.log
 node_modules
-.cache
 dist
+lib
+es
+yarn.lock
+
+
+.idea/
+.vscode/
+temp/
+
+.rts2*
