@@ -12,11 +12,12 @@
     "access": "public"
   },
   "main": "dist/index.js",
-  "types": "dist/typings.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*.js",
     "dist/*.js.map",
     "dist/typings.d.ts",
+    "dist/index.d.ts",
     "src"
   ],
   "engines": {
@@ -29,7 +30,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"**/*.md\"",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
-    "prepare": "npm run lint && npm run format && npm test && npm run build-ci"
+    "prepare": "npm run lint && npm run format && npm test && npm run build-ci",
+    "prepublish": "npm run prepare"
   },
   "husky": {
     "hooks": {
