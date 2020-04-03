@@ -25,7 +25,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build --format cjs,esm,umd --name twilio-client-redux && api-extractor run --local",
-    "build-ci": "tsdx build --format cjs,esm,umd --name twilio-client-redux && api-extractor run",
+    "build-ci": "tsdx build --format cjs,esm,umd --name twilio-client-redux && api-extractor run --local",
     "format": "prettier --write \"src/**/*.ts\" \"**/*.md\"",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
