@@ -15,4 +15,3 @@ jobs:
           CI: 'false'
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          build-script: 'build:web'

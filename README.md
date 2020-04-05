@@ -1,167 +1,196 @@
-# TSDX React User Guide
+# Twilio Client Redux
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+## Purpose
 
-> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+This package is intended to be used with [`twilio-client.js`](https://github.com/twilio/twilio-client.js) and make integrating it's event emitters with redux very straightforward. We recommend using it along side [Redux Toolkit](https://github.com/reduxjs/redux-toolkit) for type safety and all code examples are shown with RTK implementations.
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+Note: As of right now, Twilio does not export types that are easily consumable in their frontend libraries, but we do our best to give you an accurate representation of the serializable **device** and **connection** when appropriate. This is mostly just for logging purposes as you can't call methods on the serialized `Device` or `Connection` objects.
 
-## Commands
+## Installation
 
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
+Using `npm`:
 
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
+```
+npm i twilio-client-redux
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+Using `yarn`:
 
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+```
+yarn add twilio-client-redux
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, [we use Parcel's aliasing](https://github.com/palmerhq/tsdx/pull/88/files).
+## Usage
 
-To do a one-off build, use `npm run build` or `yarn build`.
+### Add the middleware
 
-To run tests, use `npm test` or `yarn test`.
+```ts
+// store.ts
 
-## Configuration
+import { configureStore, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
+import TwilioClientRedux from 'twilio-client-redux';
 
-Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+import rootReducer, { RootState } from './rootReducer';
 
-### Jest
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: [...getDefaultMiddleware(), TwilioClientRedux()],
+});
 
-Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
+export type AppDispatch = typeof store.dispatch;
 
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```shell
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+export default store;
 ```
 
-#### React Testing Library
+### Initialize a device
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+```ts
+// MyPhoneApp.ts
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setup } from "twilio-client-redux";
 
-### Rollup
+export const MyPhoneApp = () => {
 
-TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+const dispatch = useDispatch();
 
-### TypeScript
+useEffect(() => {
+  // You could fetch a token here, or pass it in as a prop, or whatever makes sense for your app
+    dispatch(setup(token, { debug: true }));
+}, [token])
+});
 
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
+return (<PhoneUI />);
 
-## Continuous Integration
+};
+```
 
-### Travis
+Device setup options:
 
-_to be completed_
-
-### Circle
-
-_to be completed_
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
+```ts
+declare interface DeviceConfigOptions {
+  allowIncomingWhileBusy?: boolean;
+  audioConstraints?: MediaTrackConstraints | boolean;
+  closeProtection?: boolean | string;
+  codecPreferences?: Codec[];
+  debug?: boolean;
+  disableAudioContextSounds?: boolean;
+  dscp?: boolean;
+  enableIceRestart?: boolean;
+  enableRingingState?: boolean;
+  fakeLocalDTMF?: boolean;
+  forceAggressiveIceNomination?: boolean;
+  maxAverageBitrate?: number;
+  region?: string;
+  rtcConfiguration?: RTCConfiguration;
+  sounds?: Partial<Record<SoundName, string>>;
+  warnings?: boolean;
 }
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+### Managing connections
 
-## Module Formats
+We provide every method that is available to `twilio-client.js` as exported actions. Note that you can include a `deviceId` - if you do not, it will be set as 'default'. This allows you to manage multiple devices.
 
-CJS, ESModules, and UMD module formats are supported.
+```ts
+setOutputDevice(); // if you passed in storeAudioDevices: true to `setup`, this will store in localStorage. it will attempt to be reused when the device initialized in the future
+setInputDevice(); // sets the input device and behaves the same as setOutputDevice
+testOutputDevice(); // can be used to play a chime on the currently set output device
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+makeCall();
+hangupCall();
+sendDigit(); // sends a digit to the active connection
 
-## Using the Playground
+setMute(); // mute the current connection on the device
+toggleMute(); // toggles the mute state
+getMuteStatus(); // returns `{ muted: value }`
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+getStatus(); // returns the status of the active connection
+
+acceptCall();
+rejectCall();
+ignoreCall();
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
+## Responding to middleware-generated actions in a reducer
 
-## Deploying the Playground
+By default, the middleware creates actions for every `twilio-client` event listener. Depending on your redux setup, you can append `.type` to the end of the action you're looking for to get it's type value (ex: `onReady.type` === `@tcr::DEVICE_READY`)
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+### Included actions that are created after initializing a Device
 
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+```ts
+onReady;
+onCancel;
+onConnect;
+onError;
+onDisconnect;
+onIncoming;
+onOffline;
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+Example slice responding to common use cases:
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+```ts
+// phoneSlice.ts
+
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  onReady,
+  onConnect,
+  onDisconnect,
+  getMuteStatus,
+} from 'twilio-client-redux';
+import { RootState } from 'src/store/rootReducer';
+import { apiRequest } from 'src/utils';
+
+// in this case, we make an API request to our server to initiate a call. being that
+// the default value in the middleware is to automatically accept incoming connections
+// our call will be bridged immediately. your implementation will vary.
+export const makeCall = createAsyncThunk(
+  'phone/makeCall',
+  async (phone: string) => {
+    const {
+      data: { data },
+    } = await apiRequest.post<Call>(`agent/calls`, { phone });
+    return data;
+  }
+);
+
+const initialState = {
+  call: {},
+  muted: false,
+  status: 'idle',
+};
+
+const slice = createSlice({
+  name: 'phone',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(onReady, (state, action) => {
+      // Note that action is type safe here and will return a serialized `Device`
+      state.status = 'idle';
+    });
+    builder.addCase(onConnect, (state, action) => {
+      // Note that action is type safe here and will return a serialized `Connection`
+      state.status = 'active';
+    });
+    builder.addCase(onDisconnect, (state, action) => {
+      // Note that action is type safe here and will return a serialized `Device`
+      return initialState;
+    });
+    builder.addCase(makeCall.fulfilled, (state, action) => {
+      // Note that action is type safe here and will return a call from our API
+      state.status = 'ringing';
+      state.call = action.payload;
+    });
+    builder.addCase(getMuteStatus, (state, action) => {
+      state.muted = action.payload.muted;
+    });
+  },
+});
+
+export default slice.reducer;
+
+export const selectIsMuted = (state: RootState) => state.phone.muted;
 ```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
