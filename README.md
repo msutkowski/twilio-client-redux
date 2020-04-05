@@ -2,9 +2,11 @@
 
 ## Purpose
 
-This package is intended to be used with [`twilio-client.js`](https://github.com/twilio/twilio-client.js) and make integrating it's event emitters with redux very straightforward. We recommend using it along side [Redux Toolkit](https://github.com/reduxjs/redux-toolkit) for type safety and all code examples are shown with RTK implementations.
+This package is intended to be used with [`twilio-client.js`](https://github.com/twilio/twilio-client.js) and to make integrating its event emitters with redux very straightforward. We recommend using it along side [Redux Toolkit](https://github.com/reduxjs/redux-toolkit) for several reasons and all code examples are shown with RTK implementations.
 
-Note: As of right now, Twilio does not export types that are easily consumable in their frontend libraries, but we do our best to give you an accurate representation of the serializable **device** and **connection** when appropriate. This is mostly just for logging purposes as you can't call methods on the serialized `Device` or `Connection` objects.
+The general implementation of this library is currently very opinionated, but should work for every use case - if you have any specific requests, please open an issue or PR and we'd be happy to include it. Our goal is to track `twilio-client` releases and upgrade as necessary.
+
+> Note: As of right now, Twilio does not export types that are easily consumable in their frontend libraries, but we do our best to give you an accurate representation of the serializable **device** and **connection** when appropriate. This is mostly just for logging purposes as you can't call methods on the serialized `Device` or `Connection` objects.
 
 ## Installation
 
@@ -23,6 +25,26 @@ yarn add twilio-client-redux
 ## Usage
 
 ### Add the middleware
+
+At a high level, the implementation looks like this:
+
+1.  Add the middleware
+2.  Create a device instance with your capability token by `dispatch`ing `setup(token, options)`
+3.  `dispatch` actions to make calls, control the device, etc etc.
+4.  Respond to events in relevant reducers to handle `Device` and/or `Connection` events
+5.  Have a phone party!
+
+The middleware accepts the following options:
+
+```ts
+export interface MiddlewareOptions {
+  storeAudioDevices?: boolean; // default = true. store the payload of setInputDevice/setOutputDevice to localStorage. will automatically try to use the values when setting up a future device.
+  connectOnIncoming?: boolean; // default = true. automatically accept incoming connections
+  prefix?: string; // default = @tcr. currently unimplemented and may be implemented in the future
+}
+```
+
+Example implementation:
 
 ```ts
 // store.ts
@@ -65,7 +87,9 @@ return (<PhoneUI />);
 };
 ```
 
-Device setup options:
+#### Device setup options:
+
+Accepts the standard `twilio-client` `Device` options:
 
 ```ts
 declare interface DeviceConfigOptions {
@@ -88,15 +112,23 @@ declare interface DeviceConfigOptions {
 }
 ```
 
-### Managing connections
+#### Device actions:
 
-We provide every method that is available to `twilio-client.js` as exported actions. Note that you can include a `deviceId` - if you do not, it will be set as 'default'. This allows you to manage multiple devices.
+> Note: All devices actions take an optional parameter of `deviceId`. By default, this is set to 'default'. This allows you to manage multiple devices if your implementation requires that.
 
 ```ts
+setup(); // initialize a device.
+destroy(); // destroy the device instance and disconnect all connections. you will need to call setup again to create a new device.
 setOutputDevice(); // if you passed in storeAudioDevices: true to `setup`, this will store in localStorage. it will attempt to be reused when the device initialized in the future
 setInputDevice(); // sets the input device and behaves the same as setOutputDevice
 testOutputDevice(); // can be used to play a chime on the currently set output device
+```
 
+### Managing connections
+
+We provide every method that is available to `twilio-client.js` as exported actions. All methods take an optional `deviceId` parameter.
+
+```ts
 makeCall();
 hangupCall();
 sendDigit(); // sends a digit to the active connection
@@ -114,9 +146,20 @@ ignoreCall();
 
 ## Responding to middleware-generated actions in a reducer
 
-By default, the middleware creates actions for every `twilio-client` event listener. Depending on your redux setup, you can append `.type` to the end of the action you're looking for to get it's type value (ex: `onReady.type` === `@tcr::DEVICE_READY`)
+By default, the middleware creates actions for every `twilio-client` event listener. Depending on your redux setup, you can append `.type` to the end of the action you're looking for to get it's type value (ex: `onReady.type` === `@tcr::DEVICE_READY`).
 
-### Included actions that are created after initializing a Device
+In a non-`createSlice` implementation, that might look like:
+
+```js
+// phoneReducer.js
+// ... reducer code
+switch (action.type) {
+  case onReady.type:
+  // Do things when the device is ready
+}
+```
+
+### Included action types that are created after initializing a Device
 
 ```ts
 onReady;
@@ -166,7 +209,7 @@ const slice = createSlice({
   name: 'phone',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder.addCase(onReady, (state, action) => {
       // Note that action is type safe here and will return a serialized `Device`
       state.status = 'idle';
@@ -179,9 +222,13 @@ const slice = createSlice({
       // Note that action is type safe here and will return a serialized `Device`
       return initialState;
     });
-    builder.addCase(makeCall.fulfilled, (state, action) => {
-      // Note that action is type safe here and will return a call from our API
+    builder.addCase(makeCall.pending, (state, action) => {
+      // set state to ringing when we initiate the API request to start the call
       state.status = 'ringing';
+    });
+    builder.addCase(makeCall.fulfilled, (state, action) => {
+      // Note that action is type safe here and will return a action.payload will be the type of Call from our API
+      state.status = 'active';
       state.call = action.payload;
     });
     builder.addCase(getMuteStatus, (state, action) => {

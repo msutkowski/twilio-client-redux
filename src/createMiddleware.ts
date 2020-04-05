@@ -49,7 +49,7 @@ const defaultOptions = {
 /**
  * Create the middleware.
  *
- * @param {Options} opts
+ * @param {MiddlewareOptions} opts
  *
  * @returns {Middleware}
  */
