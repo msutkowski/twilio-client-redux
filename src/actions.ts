@@ -282,18 +282,20 @@ export interface DeviceConfigOptions {
   disableAudioContextSounds?: boolean;
 
   /**
-   * Whether to use googDscp in RTC constraints.
+   * Specifies whether Twilio Client will ask WebRTC to set the Differentiated Services field in the packet headers for all WebRTC traffic. Note: At this time, DSCP is only supported in Google Chrome, and does not work on Windows.
    */
   dscp?: boolean;
 
   /**
-   * Whether to automatically restart ICE when media connection fails
+   * When set to true, allows for detecting when media connection fails which will trigger automatic media reconnection, and for detecting when media connection is restored, as well as the Connection#reconnecting and Connection#reconnected` events.
+   * Default: false
    */
   enableIceRestart?: boolean;
 
   /**
    * Whether the ringing state should be enabled on {@link Connection} objects. This is required
    * to enable answerOnBridge functionality.
+   * Default: false
    */
   enableRingingState?: boolean;
 
@@ -303,6 +305,16 @@ export interface DeviceConfigOptions {
    * using real DTMF tones for user interface. In 2.0, this will be enabled by default.
    */
   fakeLocalDTMF?: boolean;
+
+  /**
+   * An array of custom ICE servers (https://developer.mozilla.org/en-US/docs/Web/API/RTCIceServer/urls) to use to connect media. If you have custom Twilio TURN servers from Twilio NTS, you can specify them here.
+   */
+  iceServers?: {
+    url?: string;
+    urls?: string[];
+    username?: string;
+    credential?: string;
+  }[];
 
   /**
    * Experimental feature.
@@ -321,7 +333,9 @@ export interface DeviceConfigOptions {
   maxAverageBitrate?: number;
 
   /**
-   * The region code of the region to connect to.
+   * Specifies which Twilio Data Center to use when registering, initiating calls, and receiving calls
+   * https://www.twilio.com/docs/api/client/regions#twilio-js-regions
+   * Default: gll
    */
   region?: string;
 
@@ -332,11 +346,13 @@ export interface DeviceConfigOptions {
 
   /**
    * A mapping of custom sound URLs by sound name.
+   * Default: null
    */
   sounds?: Partial<Record<SoundName, string>>;
 
   /**
-   * Whether to enable warn logging.
+   * Whether to enable warn logging. Can be true or false. Set this property to false to disable logging warnings to your browser console. This can be overridden using loglevel APIs. Please see SDK Logger section for details - https://www.twilio.com/docs/voice/client/javascript/device#sdk-logger.
+   * Default: true
    */
   warnings?: boolean;
 }
