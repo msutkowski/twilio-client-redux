@@ -309,7 +309,12 @@ export interface DeviceConfigOptions {
   /**
    * An array of custom ICE servers (https://developer.mozilla.org/en-US/docs/Web/API/RTCIceServer/urls) to use to connect media. If you have custom Twilio TURN servers from Twilio NTS, you can specify them here.
    */
-  iceServers?: any[];
+  iceServers?: {
+    url?: string;
+    urls?: string[];
+    username?: string;
+    credential?: string;
+  }[];
 
   /**
    * Experimental feature.
