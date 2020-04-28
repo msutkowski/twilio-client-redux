@@ -49,10 +49,7 @@ export const miniSerializeError = (
   return { message: String(value) };
 };
 
-export enum Codec {
-  Opus = 'opus',
-  PCMU = 'pcmu',
-}
+export type Codec = 'opus' | 'pcmu';
 
 export interface Parameters {
   From: string;
