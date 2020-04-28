@@ -141,7 +141,7 @@ export default (opts?: MiddlewareOptions): Middleware => {
       { payload: { deviceId } }: ReturnType<typeof destroy>
     ) => {
       if (deviceId && devices[deviceId]) {
-        devices[deviceId].device.destroy();
+        devices[deviceId].destroy();
       } else {
         console.error(`Device ${deviceId} not found or already destroyed`);
       }
