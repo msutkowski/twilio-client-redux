@@ -1,4 +1,4 @@
-import { miniSerializeError, SerializedConnection } from './utils';
+import { miniSerializeError, SerializedConnection, Codec } from './utils';
 import { createAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from './constants';
 
@@ -242,10 +242,7 @@ export enum SoundName {
   DtmfS = 'dtmfs',
   DtmfH = 'dtmfh',
 }
-export enum Codec {
-  Opus = 'opus',
-  PCMU = 'pcmu',
-}
+
 export interface DeviceConfigOptions {
   [key: string]: any;
   /**
