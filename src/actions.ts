@@ -207,7 +207,7 @@ export const onStatus = createAction(
   })
 );
 
-export type Action =
+export type BuiltinActions =
   | ReturnType<typeof onCancel>
   | ReturnType<typeof onConnect>
   | ReturnType<typeof onError>
@@ -218,7 +218,7 @@ export type Action =
 
 export const error = createAction(
   `${DEFAULT_PREFIX}::UNHANDLED_ERROR`,
-  (action: Action | null, err: Error) => ({
+  (action: BuiltinActions | null, err: Error) => ({
     error: miniSerializeError(err),
     payload: action,
   })

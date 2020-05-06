@@ -15,7 +15,6 @@ import {
   setOutputDevice,
   testOutputDevice,
   error,
-  Action,
   setMute,
   toggleMute,
   acceptCall,
@@ -245,7 +244,7 @@ export default (opts?: MiddlewareOptions): Middleware => {
   };
 
   // Middleware function.
-  return (store: MiddlewareAPI) => next => (action: Action) => {
+  return (store: MiddlewareAPI) => next => action => {
     const { dispatch } = store;
     const { type: actionType } = action;
 
