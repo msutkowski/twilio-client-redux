@@ -18,6 +18,7 @@
     "dist/*.js",
     "dist/*.js.map",
     "dist/typings.d.ts",
+    "dist/index.d.ts",
     "src"
   ],
   "engines": {

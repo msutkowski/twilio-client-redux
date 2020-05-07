@@ -1,5 +1,5 @@
 import { Middleware, MiddlewareAPI } from 'redux';
-import Twilio from 'twilio-client';
+import * as Twilio from 'twilio-client';
 
 import {
   setup,
