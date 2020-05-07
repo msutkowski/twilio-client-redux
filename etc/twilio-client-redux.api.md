@@ -7,10 +7,7 @@
 import { Middleware } from 'redux';
 
 // @public
-export const acceptCall: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[MediaTrackConstraints, (string | undefined)?], {
-    audioConstraints: MediaTrackConstraints;
-    deviceId: string;
-}, string, never, never>;
+export const acceptCall: any;
 
 // @public (undocumented)
 export const CONSTANTS: {
@@ -25,119 +22,70 @@ const _default: (opts?: MiddlewareOptions | undefined) => Middleware<{}, any, im
 export default _default;
 
 // @public (undocumented)
-export const destroy: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const destroy: any;
 
 // @public (undocumented)
-export const error: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[{
-    payload: SerializedConnection;
-    type: string;
-} | {
-    payload: object;
-    type: string;
-} | null, Error], {
-    payload: SerializedConnection;
-    type: string;
-} | {
-    payload: object;
-    type: string;
-} | null, string, import("./utils").SerializedError, never>;
+export const error: any;
 
 // @public (undocumented)
-export const getMuteStatus: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const getMuteStatus: any;
 
 // @public (undocumented)
-export const getStatus: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const getStatus: any;
 
 // @public (undocumented)
-export const hangupCall: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const hangupCall: any;
 
 // @public (undocumented)
-export const ignoreCall: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const ignoreCall: any;
 
 // @public
-export const makeCall: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[Record<string, string>, MediaTrackConstraints, (string | undefined)?], {
-    audioConstraints: MediaTrackConstraints;
-    params: Record<string, string>;
-    deviceId: string;
-}, string, never, never>;
+export const makeCall: any;
 
 // @public (undocumented)
-export const onCancel: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[SerializedConnection], SerializedConnection, string, never, never>;
+export const onCancel: any;
 
 // @public (undocumented)
-export const onConnect: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[SerializedConnection], SerializedConnection, string, never, never>;
+export const onConnect: any;
 
 // @public (undocumented)
-export const onDisconnect: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[SerializedConnection], SerializedConnection, string, never, never>;
+export const onDisconnect: any;
 
 // @public (undocumented)
-export const onError: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[object], object, string, never, never>;
+export const onError: any;
 
 // @public (undocumented)
-export const onIncoming: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[SerializedConnection], SerializedConnection, string, never, never>;
+export const onIncoming: any;
 
 // @public (undocumented)
-export const onOffline: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[object], object, string, never, never>;
+export const onOffline: any;
 
 // @public (undocumented)
-export const onReady: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[object], object, string, never, never>;
+export const onReady: any;
 
 // @public (undocumented)
-export const rejectCall: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const rejectCall: any;
 
 // @public (undocumented)
-export const sendDigit: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[string, (string | undefined)?], {
-    digit: string;
-    deviceId: string;
-}, string, never, never>;
+export const sendDigit: any;
 
 // @public (undocumented)
-export const setInputDevice: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[string, (string | undefined)?], {
-    audioDeviceId: string;
-    deviceId: string;
-}, string, never, never>;
+export const setInputDevice: any;
 
 // @public (undocumented)
-export const setMute: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[boolean, (string | undefined)?], {
-    muted: boolean;
-    deviceId: string;
-}, string, never, never>;
+export const setMute: any;
 
 // @public (undocumented)
-export const setOutputDevice: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[string, (string | undefined)?], {
-    audioDeviceId: string;
-    deviceId: string;
-}, string, never, never>;
+export const setOutputDevice: any;
 
 // @public (undocumented)
-export const setup: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[string, (DeviceConfigOptions | undefined)?, (string | undefined)?], {
-    token: string;
-    opts: DeviceConfigOptions | undefined;
-    deviceId: string;
-}, string, never, never>;
+export const setup: any;
 
 // @public (undocumented)
-export const testOutputDevice: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?, (string | undefined)?], {
-    audioDeviceId: string | undefined;
-    deviceId: string;
-}, string, never, never>;
+export const testOutputDevice: any;
 
 // @public (undocumented)
-export const toggleMute: import("@reduxjs/toolkit").ActionCreatorWithPreparedPayload<[(string | undefined)?], {
-    deviceId: string;
-}, string, never, never>;
+export const toggleMute: any;
 
 
 // (No @packageDocumentation comment for this package)

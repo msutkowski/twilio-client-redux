@@ -1,8 +1,68 @@
 import { miniSerializeError, SerializedConnection, Codec } from './utils';
-import { createAction } from '@reduxjs/toolkit';
 import { CONSTANTS } from './constants';
+import { Action } from 'redux';
 
 const { DEFAULT_PREFIX } = CONSTANTS;
+
+/**
+ * An action with a string type and an associated payload. This is the
+ * type of action returned by `createAction()` action creators.
+ *
+ * @template P The type of the action's payload.
+ * @template T the type used for the action type.
+ * @template M The type of the action's meta (optional)
+ * @template E The type of the action's error (optional)
+ *
+ * @public
+ */
+export type PayloadAction<
+  P = void,
+  T extends string = string,
+  M = never,
+  E = never
+> = {
+  payload: P;
+  type: T;
+} & ([M] extends [never]
+  ? {}
+  : {
+      meta: M;
+    }) &
+  ([E] extends [never]
+    ? {}
+    : {
+        error: E;
+      });
+
+// Action creators for user dispatched actions. These actions are all optionally
+// prefixed.
+function createAction(type: string, prepareAction?: Function): any {
+  function actionCreator(...args: any[]) {
+    if (prepareAction) {
+      let prepared = prepareAction(...args);
+      if (!prepared) {
+        throw new Error('prepareAction did not return an object');
+      }
+
+      return {
+        type,
+        payload: prepared.payload,
+        ...('meta' in prepared && { meta: prepared.meta }),
+        ...('error' in prepared && { error: prepared.error }),
+      };
+    }
+    return { type, payload: args[0] };
+  }
+
+  actionCreator.toString = () => `${type}`;
+
+  actionCreator.type = type;
+
+  actionCreator.match = (action: Action<unknown>): action is PayloadAction =>
+    action.type === type;
+
+  return actionCreator;
+}
 
 // Action creators for user dispatched actions. These actions are all optionally
 // prefixed.
