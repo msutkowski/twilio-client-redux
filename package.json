@@ -34,7 +34,7 @@
     "prepare": "npm run lint && npm run format && npm test && npm run build-ci",
     "prepublish": "npm run prepare",
     "bundlewatch": "bundlewatch --config .bundlewatch.config.json",
-    "bundlesize": "bundlesize --config bundlesize.config.json"
+    "bundlesize": "bundlesize --config bundlesize.config.json --enable-github-checks"
   },
   "husky": {
     "hooks": {
