@@ -27,7 +27,7 @@ jobs:
             ${{ runner.OS }}-node-v${{ env.NODE }}-
 
       - name: Install dependencies, test and build
-        run: npm install
+        run: npm ci
     
       - uses: jackyef/bundlewatch-gh-action@master
         with:
