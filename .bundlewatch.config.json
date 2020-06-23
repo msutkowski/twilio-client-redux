@@ -1,0 +1,20 @@
+{
+    "files": [
+      {
+        "path": "./disttwilio-client-redux.cjs.production.min.js",
+        "maxSize": "6 kB"
+      },
+      {
+        "path": "./disttwilio-client-redux.umd.min.js",
+        "maxSize": "12 kB"
+      },
+      {
+        "path": "./disttwilio-client-redux.esm.js",
+        "maxSize": "14 kB"
+      }
+    ],
+    "ci": {
+      "trackBranches": ["master"]
+    }
+  }
+  
