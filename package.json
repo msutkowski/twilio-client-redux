@@ -57,6 +57,7 @@
     "husky": "^4.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "rollup-plugin-size": "^0.2.2",
     "rollup-plugin-strip-code": "^0.2.7",
     "tsdx": "^0.13.1",
     "tslib": "^1.11.1",

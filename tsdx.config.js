@@ -1,4 +1,5 @@
 const { join } = require('path');
+const size = require('rollup-plugin-size');
 
 const stripCode = require('rollup-plugin-strip-code');
 
@@ -14,6 +15,7 @@ module.exports = {
       case 'umd':
         delete config.external;
         config.output.indent = false;
+        config.plugins.unshift(size())
         if (env === 'production') {
           config.plugins.unshift(
             stripCode({
