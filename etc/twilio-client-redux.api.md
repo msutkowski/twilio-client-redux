@@ -17,7 +17,7 @@ export const CONSTANTS: {
 };
 
 // @public (undocumented)
-const _default: (opts?: MiddlewareOptions | undefined) => Middleware<{}, any, import("redux").Dispatch<import("redux").AnyAction>>;
+const _default: (opts?: MiddlewareOptions | undefined) => Middleware;
 
 export default _default;
 
