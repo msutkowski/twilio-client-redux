@@ -1,0 +1,20 @@
+{
+    "files": [
+      {
+        "path": "./dist/twilio-client-redux.cjs.production.min.js",
+        "maxSize": "6 kB"
+      },
+      {
+        "path": "./dist/twilio-client-redux.umd.min.js",
+        "maxSize": "60 kB"
+      },
+      {
+        "path": "./dist/twilio-client-redux.esm.js",
+        "maxSize": "6 kB"
+      }
+    ],
+    "ci": {
+      "trackBranches": ["master"]
+    }
+  }
+  
