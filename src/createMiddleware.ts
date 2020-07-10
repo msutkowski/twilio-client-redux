@@ -63,7 +63,7 @@ export default (opts?: MiddlewareOptions): Middleware => {
   const actionPrefixExp = RegExp(`^${prefix}::`);
 
   // Support multiple devices
-  let devices: {
+  const devices: {
     [key: string]: typeof Twilio.Device;
   } = {};
 
@@ -79,7 +79,6 @@ export default (opts?: MiddlewareOptions): Middleware => {
     return audioConstraints;
   };
 
-  // Define the list of handlers, now that we have an instance of ReduxWebSocket.
   const handlers = {
     [setup.type]: (
       { dispatch }: MiddlewareAPI,

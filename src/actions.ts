@@ -36,7 +36,7 @@ export type PayloadAction<
 
 // Action creators for user dispatched actions. These actions are all optionally
 // prefixed.
-function createAction(type: string, prepareAction?: Function): any {
+function createAction(type: string, prepareAction?: Function) {
   function actionCreator(...args: any[]) {
     if (prepareAction) {
       let prepared = prepareAction(...args);
