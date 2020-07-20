@@ -4,10 +4,24 @@
 
 ```ts
 
+import { Action } from 'redux';
 import { Middleware } from 'redux';
 
 // @public
-export const acceptCall: any;
+export const acceptCall: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
 export const CONSTANTS: {
@@ -22,70 +36,356 @@ const _default: (opts?: MiddlewareOptions | undefined) => Middleware;
 export default _default;
 
 // @public (undocumented)
-export const destroy: any;
+export const destroy: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const error: any;
+export const error: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const getMuteStatus: any;
+export const getMuteStatus: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const getStatus: any;
+export const getStatus: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const hangupCall: any;
+export const hangupCall: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const ignoreCall: any;
+export const ignoreCall: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public
-export const makeCall: any;
+export const makeCall: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onCancel: any;
+export const onCancel: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onConnect: any;
+export const onConnect: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onDisconnect: any;
+export const onDisconnect: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onError: any;
+export const onError: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onIncoming: any;
+export const onIncoming: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onOffline: any;
+export const onOffline: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const onReady: any;
+export const onReady: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const rejectCall: any;
+export const rejectCall: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const sendDigit: any;
+export const sendDigit: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const setInputDevice: any;
+export const setInputDevice: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const setMute: any;
+export const setMute: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const setOutputDevice: any;
+export const setOutputDevice: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const setup: any;
+export const setup: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const testOutputDevice: any;
+export const testOutputDevice: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 // @public (undocumented)
-export const toggleMute: any;
+export const toggleMute: {
+    (...args: any[]): {
+        error?: any;
+        meta?: any;
+        type: string;
+        payload: any;
+    };
+    toString(): string;
+    type: string;
+    match(action: Action<unknown>): action is {
+        payload: void;
+        type: string;
+    };
+};
 
 
 // (No @packageDocumentation comment for this package)
